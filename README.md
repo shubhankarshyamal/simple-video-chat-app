@@ -9,7 +9,7 @@ $ git clone git@github.com:basir/node-react-ecommerce.git
 $ cd node-react-ecommerce
 ```
 
-
+### 2. Run Command
 ```
 $ npm install
 $ npm start
