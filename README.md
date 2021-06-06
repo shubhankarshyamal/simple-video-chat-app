@@ -1,5 +1,5 @@
 # simple-video-chat-app
-using javascript
+using javascript and webRTC
 ## Run Locally
 
 ### 1. Clone repo
