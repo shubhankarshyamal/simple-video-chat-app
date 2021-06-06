@@ -5,8 +5,8 @@ using javascript
 ### 1. Clone repo
 
 ```
-$ git clone git@github.com:basir/node-react-ecommerce.git
-$ cd node-react-ecommerce
+$ git clone https://github.com/sgyaswal/simple-video-chat-app.git
+$ cd simple-video-chat-app
 ```
 
 ### 2. Run Command
