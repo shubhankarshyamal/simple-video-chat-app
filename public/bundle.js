@@ -16,7 +16,7 @@ for (var i = 0, len = code.length; i < len; ++i) {
 }
 
 // Support decoding URL-safe base64 strings, as Node.js does.
-// See: https://en.wikipedia.org/wiki/Base64#URL_applications
+
 revLookup['-'.charCodeAt(0)] = 62
 revLookup['_'.charCodeAt(0)] = 63
 
@@ -28,8 +28,7 @@ function getLens (b64) {
   }
 
   // Trim off extra bytes after placeholder bytes are found
-  // See: https://github.com/beatgammit/base64-js/issues/42
-  var validLen = b64.indexOf('=')
+    var validLen = b64.indexOf('=')
   if (validLen === -1) validLen = len
 
   var placeHoldersLen = validLen === len
@@ -155,13 +154,6 @@ function fromByteArray (uint8) {
 
 },{}],3:[function(require,module,exports){
 (function (Buffer){
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-/* eslint-disable no-proto */
 
 'use strict'
 
@@ -175,20 +167,7 @@ exports.INSPECT_MAX_BYTES = 50
 var K_MAX_LENGTH = 0x7fffffff
 exports.kMaxLength = K_MAX_LENGTH
 
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Print warning and recommend using `buffer` v4.x which has an Object
- *               implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * We report that the browser does not support typed arrays if the are not subclassable
- * using __proto__. Firefox 4-29 lacks support for adding new properties to `Uint8Array`
- * (See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438). IE 10 lacks support
- * for __proto__ and has a buggy typed array implementation.
- */
+
 Buffer.TYPED_ARRAY_SUPPORT = typedArraySupport()
 
 if (!Buffer.TYPED_ARRAY_SUPPORT && typeof console !== 'undefined' &&
@@ -236,15 +215,6 @@ function createBuffer (length) {
   return buf
 }
 
-/**
- * The Buffer constructor returns instances of `Uint8Array` that have their
- * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
- * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
- * and the `Uint8Array` methods. Square bracket notation works as expected -- it
- * returns a single octet.
- *
- * The `Uint8Array` prototype remains unmodified.
- */
 
 function Buffer (arg, encodingOrOffset, length) {
   // Common case.
@@ -320,20 +290,11 @@ function from (value, encodingOrOffset, length) {
   )
 }
 
-/**
- * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
- * if value is a number.
- * Buffer.from(str[, encoding])
- * Buffer.from(array)
- * Buffer.from(buffer)
- * Buffer.from(arrayBuffer[, byteOffset[, length]])
- **/
+
 Buffer.from = function (value, encodingOrOffset, length) {
   return from(value, encodingOrOffset, length)
 }
-
-// Note: Change prototype *after* Buffer.from is defined to workaround Chrome bug:
-// https://github.com/feross/buffer/pull/148
+8
 Buffer.prototype.__proto__ = Uint8Array.prototype
 Buffer.__proto__ = Uint8Array
 
@@ -361,10 +322,7 @@ function alloc (size, fill, encoding) {
   return createBuffer(size)
 }
 
-/**
- * Creates a new filled Buffer instance.
- * alloc(size[, fill[, encoding]])
- **/
+
 Buffer.alloc = function (size, fill, encoding) {
   return alloc(size, fill, encoding)
 }
@@ -374,15 +332,11 @@ function allocUnsafe (size) {
   return createBuffer(size < 0 ? 0 : checked(size) | 0)
 }
 
-/**
- * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
- * */
+
 Buffer.allocUnsafe = function (size) {
   return allocUnsafe(size)
 }
-/**
- * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
- */
+
 Buffer.allocUnsafeSlow = function (size) {
   return allocUnsafe(size)
 }
@@ -402,9 +356,7 @@ function fromString (string, encoding) {
   var actual = buf.write(string, encoding)
 
   if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
+   
     buf = buf.slice(0, actual)
   }
 
@@ -438,7 +390,7 @@ function fromArrayBuffer (array, byteOffset, length) {
     buf = new Uint8Array(array, byteOffset, length)
   }
 
-  // Return an augmented `Uint8Array` instance
+	
   buf.__proto__ = Buffer.prototype
   return buf
 }
@@ -469,8 +421,7 @@ function fromObject (obj) {
 }
 
 function checked (length) {
-  // Note: cannot use `length < K_MAX_LENGTH` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
+  
   if (length >= K_MAX_LENGTH) {
     throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
                          'size: 0x' + K_MAX_LENGTH.toString(16) + ' bytes')
@@ -479,7 +430,7 @@ function checked (length) {
 }
 
 function SlowBuffer (length) {
-  if (+length != length) { // eslint-disable-line eqeqeq
+  if (+length != length) { 
     length = 0
   }
   return Buffer.alloc(+length)
@@ -487,7 +438,7 @@ function SlowBuffer (length) {
 
 Buffer.isBuffer = function isBuffer (b) {
   return b != null && b._isBuffer === true &&
-    b !== Buffer.prototype // so Buffer.isBuffer(Buffer.prototype) will be false
+    b !== Buffer.prototype 
 }
 
 Buffer.compare = function compare (a, b) {
@@ -587,7 +538,7 @@ function byteLength (string, encoding) {
   var mustMatch = (arguments.length > 2 && arguments[2] === true)
   if (!mustMatch && len === 0) return 0
 
-  // Use a for loop to avoid recursion
+ 
   var loweredCase = false
   for (;;) {
     switch (encoding) {
@@ -621,18 +572,10 @@ Buffer.byteLength = byteLength
 function slowToString (encoding, start, end) {
   var loweredCase = false
 
-  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
-  // property of a typed array.
-
-  // This behaves neither like String nor Uint8Array in that we set start/end
-  // to their upper/lower bounds if the value passed is out of range.
-  // undefined is handled specially as per ECMA-262 6th Edition,
-  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
   if (start === undefined || start < 0) {
     start = 0
   }
-  // Return early if start > this.length. Done here to prevent potential uint32
-  // coercion fail below.
+
   if (start > this.length) {
     return ''
   }
@@ -645,7 +588,6 @@ function slowToString (encoding, start, end) {
     return ''
   }
 
-  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
   end >>>= 0
   start >>>= 0
 
@@ -688,12 +630,7 @@ function slowToString (encoding, start, end) {
   }
 }
 
-// This property is used by `Buffer.isBuffer` (and the `is-buffer` npm package)
-// to detect a Buffer instance. It's not possible to use `instanceof Buffer`
-// reliably in a browserify context because there could be multiple different
-// copies of the 'buffer' package in use. This method works even for Buffer
-// instances that were created from another copy of the `buffer` package.
-// See: https://github.com/feross/buffer/issues/154
+
 Buffer.prototype._isBuffer = true
 
 function swap (b, n, m) {
@@ -827,15 +764,7 @@ Buffer.prototype.compare = function compare (target, start, end, thisStart, this
   return 0
 }
 
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
+
 function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
   // Empty buffer means no match
   if (buffer.length === 0) return -1
@@ -851,11 +780,10 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
   }
   byteOffset = +byteOffset // Coerce to Number.
   if (numberIsNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+ 
     byteOffset = dir ? 0 : (buffer.length - 1)
   }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
+ 
   if (byteOffset < 0) byteOffset = buffer.length + byteOffset
   if (byteOffset >= buffer.length) {
     if (dir) return -1
@@ -872,7 +800,7 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
 
   // Finally, search either indexOf (if dir is true) or lastIndexOf
   if (Buffer.isBuffer(val)) {
-    // Special case: looking for empty string/buffer always fails
+   
     if (val.length === 0) {
       return -1
     }
