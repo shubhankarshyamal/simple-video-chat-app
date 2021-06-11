@@ -15,7 +15,6 @@ for (var i = 0, len = code.length; i < len; ++i) {
   revLookup[code.charCodeAt(i)] = i
 }
 
-// Support decoding URL-safe base64 strings, as Node.js does.
 
 revLookup['-'.charCodeAt(0)] = 62
 revLookup['_'.charCodeAt(0)] = 63
@@ -38,7 +37,6 @@ function getLens (b64) {
   return [validLen, placeHoldersLen]
 }
 
-// base64 is 4/3 + up to two characters of the original data
 function byteLength (b64) {
   var lens = getLens(b64)
   var validLen = lens[0]
@@ -312,9 +310,7 @@ function alloc (size, fill, encoding) {
     return createBuffer(size)
   }
   if (fill !== undefined) {
-    // Only pay attention to encoding if it's a string. This
-    // prevents accidentally sending in a number that would
-    // be interpretted as a start offset.
+  
     return typeof encoding === 'string'
       ? createBuffer(size).fill(fill, encoding)
       : createBuffer(size).fill(fill)
@@ -1094,7 +1090,7 @@ function utf8Slice (buf, start, end) {
 
 // Based on http://stackoverflow.com/a/22747272/680742, the browser with
 // the lowest limit is Chrome, with 0x10000 args.
-// We go 1 magnitude less, for safety
+
 var MAX_ARGUMENTS_LENGTH = 0x1000
 
 function decodeCodePointsArray (codePoints) {
